@@ -1,0 +1,30 @@
+import { Input, Telegraf } from "telegraf";
+import { message } from "telegraf/filters";
+import { env } from "~/env";
+
+class TelegramBot {
+  public bot: Telegraf;
+  constructor() {
+    this.bot = new Telegraf(env.BOT_TOKEN);
+
+    process.once("SIGINT", () => this.bot.stop("SIGINT"));
+    process.once("SIGTERM", () => this.bot.stop("SIGTERM"));
+
+    this.bot.on(message("text"), (ctx) => {
+      const text = ctx.message.text.trim();
+      const userId = ctx.message.from.id;
+
+      console.log(`Received message from ${userId}: ${text}`);
+    });
+
+    void this.bot.launch();
+  }
+
+  async sendResult(userId: string, message: string): Promise<void> {
+    await this.bot.telegram.sendMessage(userId, message, {
+      parse_mode: "MarkdownV2",
+    });
+  }
+}
+
+export default TelegramBot;
