@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build
+FROM node:22-bookworm-slim AS build
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -9,7 +9,7 @@ COPY . .
 RUN npm ci
 RUN node --run build
 
-FROM node:22-alpine as runner
+FROM node:22-bookworm-slim as runner
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV HOSTNAME 0.0.0.0
