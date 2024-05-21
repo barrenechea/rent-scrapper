@@ -1,3 +1,4 @@
+import { env } from "~/env";
 import { db } from "~/server/db";
 import { seenRecords } from "~/server/db/schema";
 import PortalInmobiliario from "~/server/portalinmobiliario-fetch";
@@ -16,6 +17,12 @@ const clpFormat = new Intl.NumberFormat("es-CL", {
 });
 
 export async function GET(request: Request) {
+  const auth = request.headers.get("Authorization");
+
+  if (env.AUTH_TOKEN && auth !== env.AUTH_TOKEN) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { searchParams } = new URL(request.url);
   const url = searchParams.get("url");
   if (!url) {
