@@ -1,0 +1,59 @@
+name: Continuous Delivery
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+env:
+  CONTAINER_REPO: ghcr.io/barrenechea/rent-scrapper
+
+jobs:
+  build-and-push:
+    name: Build and Push Container Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Container Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.CONTAINER_REPO }}:latest
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=min
+          build-args: |
+            "DATABASE_URL=file:./db.sqlite"
+            "BOT_TOKEN=abc123"
+
+  deploy:
+    name: Container Image Deployment
+    needs: [build-and-push]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Watchtower
+        run: |
+          curl -sS \
+            -H "Authorization: Bearer ${{ secrets.WATCHTOWER_TOKEN }}" \
+            https://watchtower.barrenechea.cl/v1/update?image=${{ env.CONTAINER_REPO }}
