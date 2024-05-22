@@ -136,6 +136,7 @@ async function customFetch(params: string): Promise<Result[]> {
     const finalUrl = `https://www.portalinmobiliario.com/api/arriendo/departamento/3-dormitorios/${params}`;
 
     const options: RequestInit = {
+      cache: "no-store",
       method: "GET",
       headers: {
         accept: "application/json, text/plain, */*",
