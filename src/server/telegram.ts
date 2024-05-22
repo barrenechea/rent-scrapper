@@ -1,4 +1,4 @@
-import { Input, Telegraf } from "telegraf";
+import { Telegraf } from "telegraf";
 import { message } from "telegraf/filters";
 import { env } from "~/env";
 

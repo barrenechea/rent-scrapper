@@ -48,12 +48,10 @@ export async function GET(request: Request) {
     const price =
       record.price.currency_id === "CLP"
         ? clpFormat.format(record.price.amount)
-        : `${record.price.currency_id} ${record.price.amount}`;
+        : `UF ${record.price.amount}`;
 
-    const message = `[${record.title}](${record.permalink})
-    ${record.sub_title}
-
-    Precio: ${price}`;
+    const message = `[${record.sub_title}](${record.permalink})
+    Precio: ${price} / mes`;
     for (const userId of userIds.filter(Boolean)) {
       await bot.sendResult(userId, message.replace(/\./g, "\\."));
     }
