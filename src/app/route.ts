@@ -57,8 +57,6 @@ export async function GET(request: Request) {
     for (const userId of userIds.filter(Boolean)) {
       await bot.sendResult(userId, message.replace(/\./g, "\\."));
     }
-
-    break;
   }
 
   return Response.json({ newRecords });
