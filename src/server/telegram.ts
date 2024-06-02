@@ -22,7 +22,7 @@ class TelegramBot {
 
   async sendResult(userId: string, message: string): Promise<void> {
     await this.bot.telegram.sendMessage(userId, message, {
-      parse_mode: "MarkdownV2",
+      parse_mode: "HTML",
     });
   }
 }

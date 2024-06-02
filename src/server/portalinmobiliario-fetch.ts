@@ -133,7 +133,7 @@ interface Response {
 
 async function customFetch(params: string): Promise<Result[]> {
   try {
-    const finalUrl = `https://www.portalinmobiliario.com/api/arriendo/departamento/3-dormitorios/${params}`;
+    const finalUrl = `https://www.portalinmobiliario.com/api/${params}`;
 
     const options: RequestInit = {
       cache: "no-store",

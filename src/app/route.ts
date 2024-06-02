@@ -50,11 +50,9 @@ export async function GET(request: Request) {
         ? clpFormat.format(record.price.amount)
         : `UF ${record.price.amount}`;
 
-    const message = `[${record.sub_title}](${record.permalink})
+    const message = `<a href="${record.permalink}">${record.sub_title}</a>
     Precio: ${price} / mes`;
-    for (const userId of userIds.filter(Boolean)) {
-      await bot.sendResult(userId, message.replace(/\./g, "\\."));
-    }
+    await Promise.all(userIds.map((userId) => bot.sendResult(userId, message)));
   }
 
   return Response.json({ newRecords });
