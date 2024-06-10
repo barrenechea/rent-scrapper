@@ -37,13 +37,6 @@ export async function GET(request: Request) {
 
   const newRecords = data.filter((record) => !existingIds.includes(record.id));
 
-  if (newRecords.length > 0) {
-    console.log("New records found", newRecords.length);
-    await db
-      .insert(seenRecords)
-      .values(newRecords.map((record) => ({ meliId: record.id })));
-  }
-
   for (const record of newRecords) {
     const price =
       record.price.currency_id === "CLP"
@@ -53,6 +46,13 @@ export async function GET(request: Request) {
     const message = `<a href="${record.permalink}">${record.sub_title}</a>
     Precio: ${price} / mes`;
     await Promise.all(userIds.map((userId) => bot.sendResult(userId, message)));
+  }
+
+  if (newRecords.length > 0) {
+    console.log(`Storing ${newRecords.length} new records`);
+    await db
+      .insert(seenRecords)
+      .values(newRecords.map((record) => ({ meliId: record.id })));
   }
 
   return Response.json({ newRecords });
