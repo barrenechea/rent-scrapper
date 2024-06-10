@@ -22,8 +22,7 @@ router.get("/", async (req, res) => {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const { searchParams } = new URL(req.url);
-  const url = searchParams.get("url");
+  const url = req.query.url as string;
   if (!url) {
     return res.status(400).json({ error: "Missing url" });
   }
