@@ -1,8 +1,10 @@
-import { env } from "~/env";
-import { db } from "~/server/db";
-import { seenRecords } from "~/server/db/schema";
-import PortalInmobiliario from "~/server/portalinmobiliario-fetch";
-import TelegramBot from "~/server/telegram";
+import express from "express";
+import { db } from "../server/db/index.js";
+import { seenRecords } from "../server/db/schema.js";
+import PortalInmobiliario from "../server/portalinmobiliario-fetch.js";
+import TelegramBot from "../server/telegram.js";
+
+export const router = express.Router();
 
 const bot = new TelegramBot();
 
@@ -16,17 +18,17 @@ const clpFormat = new Intl.NumberFormat("es-CL", {
   currency: "CLP",
 });
 
-export async function GET(request: Request) {
-  const auth = request.headers.get("Authorization");
+router.get("/", async (req, res) => {
+  const auth = req.headers.authorization;
 
-  if (env.AUTH_TOKEN && auth !== env.AUTH_TOKEN) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  if (process.env.AUTH_TOKEN && auth !== process.env.AUTH_TOKEN) {
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const { searchParams } = new URL(request.url);
+  const { searchParams } = new URL(req.url);
   const url = searchParams.get("url");
   if (!url) {
-    return Response.json({ error: "Missing url" }, { status: 400 });
+    return res.status(400).json({ error: "Missing url" });
   }
 
   const data = await PortalInmobiliario(url);
@@ -44,7 +46,7 @@ export async function GET(request: Request) {
         : `UF ${record.price.amount}`;
 
     const message = `<a href="${record.permalink}">${record.sub_title}</a>
-    Precio: ${price} / mes`;
+      Precio: ${price} / mes`;
     await Promise.all(userIds.map((userId) => bot.sendResult(userId, message)));
   }
 
@@ -55,5 +57,5 @@ export async function GET(request: Request) {
       .values(newRecords.map((record) => ({ meliId: record.id })));
   }
 
-  return Response.json({ newRecords });
-}
+  return res.json({ newRecords });
+});

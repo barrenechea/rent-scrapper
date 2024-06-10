@@ -1,11 +1,10 @@
 import { Telegraf } from "telegraf";
 import { message } from "telegraf/filters";
-import { env } from "~/env";
 
 class TelegramBot {
   public bot: Telegraf;
   constructor() {
-    this.bot = new Telegraf(env.BOT_TOKEN);
+    this.bot = new Telegraf(process.env.BOT_TOKEN ?? "");
 
     process.once("SIGINT", () => this.bot.stop("SIGINT"));
     process.once("SIGTERM", () => this.bot.stop("SIGTERM"));

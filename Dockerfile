@@ -1,26 +1,38 @@
-FROM node:22-bookworm-slim AS build
+# ---
+FROM node:22-bookworm-slim AS dev-deps
 WORKDIR /app
-ENV NEXT_TELEMETRY_DISABLED 1
+COPY package.json package-lock.json ./
+RUN npm ci
 
-ARG DATABASE_URL
-ARG BOT_TOKEN
-ARG AUTH_TOKEN
+# ---
+FROM node:22-bookworm-slim AS prd-deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+COPY --from=dev-deps /app/node_modules ./node_modules
+RUN npm prune --omit=dev
+
+# ---
+FROM node:22-bookworm-slim as builder
+
+ENV APPDIR /app
+WORKDIR $APPDIR
 
 COPY . .
-RUN npm ci
-RUN node --run build
+COPY --from=dev-deps /app/node_modules ./node_modules
 
+RUN npm run build
+
+# ---
 FROM node:22-bookworm-slim as runner
+
 ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV HOSTNAME 0.0.0.0
+ENV APPDIR /app
+
+RUN mkdir -p $APPDIR && chown -R node:node $APPDIR
+WORKDIR $APPDIR
+
+COPY --from=prd-deps --chown=node:node /app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /app/dist ./dist
 
 USER node
-WORKDIR /app
-
-COPY --chown=node:node public ./public
-COPY --chown=node:node --from=build /app/.next/standalone ./
-COPY --chown=node:node --from=build /app/public /app/.next/static ./.next/static
-
-EXPOSE 3000
-CMD ["node", "server.js"]
+CMD [ "node", "--experimental-default-type=module", "dist/index.js" ]

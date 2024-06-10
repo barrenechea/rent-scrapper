@@ -1,6 +1,6 @@
 # Rent Scrapper
 
-Rent Scrapper is a Next.js application that scrapes rental listings from Portal Inmobiliario and sends notifications via Telegram when new listings are found.
+Rent Scrapper is a Express application that scrapes rental listings from Portal Inmobiliario and sends notifications via Telegram when new listings are found.
 
 ## Features
 
@@ -12,4 +12,4 @@ Rent Scrapper is a Next.js application that scrapes rental listings from Portal 
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE.md).

@@ -1,12 +1,11 @@
+import "dotenv/config";
 import { type Config } from "drizzle-kit";
-
-import { env } from "~/env";
 
 export default {
   schema: "./src/server/db/schema.ts",
   dialect: "sqlite",
   dbCredentials: {
-    url: env.DATABASE_URL,
+    url: process.env.DATABASE_URL ?? "./db.sqlite",
   },
   tablesFilter: ["rent-scrapper_*"],
 } satisfies Config;

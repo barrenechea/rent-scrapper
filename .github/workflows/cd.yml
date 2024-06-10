@@ -43,10 +43,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=min
-          build-args: |
-            "DATABASE_URL=file:./db.sqlite"
-            "BOT_TOKEN=dummy"
-            "AUTH_TOKEN=dummy"
 
   deploy:
     name: Container Image Deployment
