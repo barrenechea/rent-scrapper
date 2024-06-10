@@ -8,10 +8,7 @@ export const router = express.Router();
 
 const bot = new TelegramBot();
 
-const userIds = [
-  "743185645", // Seba
-  "7105537351", // Fran
-];
+const userIds = process.env.TELEGRAM_IDS?.split(",") ?? [];
 
 const clpFormat = new Intl.NumberFormat("es-CL", {
   style: "currency",
