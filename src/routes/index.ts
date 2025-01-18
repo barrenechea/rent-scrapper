@@ -19,12 +19,14 @@ router.get("/", async (req, res) => {
   const auth = req.headers.authorization;
 
   if (process.env.AUTH_TOKEN && auth !== process.env.AUTH_TOKEN) {
-    return res.status(401).json({ error: "Unauthorized" });
+    res.status(401).json({ error: "Unauthorized" });
+    return;
   }
 
   const url = req.query.url as string;
   if (!url) {
-    return res.status(400).json({ error: "Missing url" });
+    res.status(400).json({ error: "Missing url" });
+    return;
   }
 
   const data = await PortalInmobiliario(url);
@@ -53,5 +55,5 @@ router.get("/", async (req, res) => {
       .values(newRecords.map((record) => ({ meliId: record.id })));
   }
 
-  return res.json({ newRecords });
+  res.status(200).json({ newRecords });
 });

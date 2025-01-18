@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=23"
   },
   "scripts": {
     "start": "node dist/index.js",
@@ -16,20 +16,20 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@libsql/client": "^0.6.2",
-    "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.31.2",
-    "express": "^4.19.2",
+    "@libsql/client": "^0.14.0",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.38.4",
+    "express": "^5.0.1",
     "telegraf": "^4.16.3"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/node": "^20.14.2",
-    "drizzle-kit": "^0.22.7",
-    "eslint": "^9.4.0",
-    "tsx": "^4.15.1",
-    "typescript": "^5.4.5",
-    "typescript-eslint": "^8.0.0-alpha.30"
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.7",
+    "drizzle-kit": "^0.30.2",
+    "eslint": "^9.18.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0"
   },
-  "packageManager": "npm@10.8.0"
+  "packageManager": "npm@11.0.0"
 }

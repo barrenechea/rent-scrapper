@@ -1,18 +1,18 @@
 # ---
-FROM node:22-bookworm-slim AS dev-deps
+FROM node:23-bookworm-slim AS dev-deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
 # ---
-FROM node:22-bookworm-slim AS prd-deps
+FROM node:23-bookworm-slim AS prd-deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY --from=dev-deps /app/node_modules ./node_modules
 RUN npm prune --omit=dev
 
 # ---
-FROM node:22-bookworm-slim as builder
+FROM node:23-bookworm-slim as builder
 
 ENV APPDIR /app
 WORKDIR $APPDIR
@@ -23,7 +23,7 @@ COPY --from=dev-deps /app/node_modules ./node_modules
 RUN npm run build
 
 # ---
-FROM node:22-bookworm-slim as runner
+FROM node:23-bookworm-slim as runner
 
 ENV NODE_ENV production
 ENV APPDIR /app
