@@ -12,9 +12,9 @@ COPY --from=dev-deps /app/node_modules ./node_modules
 RUN npm prune --omit=dev
 
 # ---
-FROM node:23-bookworm-slim as builder
+FROM node:23-bookworm-slim AS builder
 
-ENV APPDIR /app
+ENV APPDIR=/app
 WORKDIR $APPDIR
 
 COPY . .
@@ -23,10 +23,10 @@ COPY --from=dev-deps /app/node_modules ./node_modules
 RUN npm run build
 
 # ---
-FROM node:23-bookworm-slim as runner
+FROM node:23-bookworm-slim AS runner
 
-ENV NODE_ENV production
-ENV APPDIR /app
+ENV NODE_ENV=production
+ENV APPDIR=/app
 
 RUN mkdir -p $APPDIR && chown -R node:node $APPDIR
 WORKDIR $APPDIR
