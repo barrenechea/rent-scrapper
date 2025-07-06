@@ -4,5 +4,6 @@ import tseslint from "typescript-eslint";
 export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
-  ...tseslint.configs.stylistic
+  ...tseslint.configs.stylistic,
+  { ignores: ["dist"] }
 );
